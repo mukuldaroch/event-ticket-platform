@@ -29,15 +29,6 @@ jobs:
           --health-timeout=5s
           --health-retries=5
 
-      keycloak:
-        image: quay.io/keycloak/keycloak:latest
-        ports:
-          - 8080:8080
-        env:
-          KEYCLOAK_ADMIN: admin
-          KEYCLOAK_ADMIN_PASSWORD: admin
-        command: ["start-dev", "--db=dev-file"]
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -48,18 +39,15 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Wait for services
+      - name: Start Keycloak manually
         run: |
-          echo "Waiting for Postgres..."
-          for i in {1..30}; do
-            pg_isready -h localhost -p 5432 -U postgres && break
-            sleep 2
-          done
-          echo "Waiting for Keycloak..."
-          for i in {1..30}; do
-            curl -s http://localhost:8080/auth/ && break
-            sleep 2
-          done
+          docker run -d \
+            --name keycloak \
+            -p 8080:8080 \
+            -e KEYCLOAK_ADMIN=admin \
+            -e KEYCLOAK_ADMIN_PASSWORD=admin \
+            quay.io/keycloak/keycloak:latest start-dev --db=dev-file
+          sleep 20
 
       - name: Build & Test
         run: mvn clean verify -Dspring.profiles.active=ci
