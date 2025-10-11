@@ -3,7 +3,8 @@ package com.daroch.tickets.domain.entities;
 import jakarta.persistence.*;
 import jakarta.persistence.EntityListeners;
 import java.time.LocalDateTime;
-import java.util.Objects;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,8 +18,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Table(name = "users")
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
 public class User {
 
@@ -32,6 +33,9 @@ public class User {
   @Column(name = "email", nullable = false, unique = true)
   private String email;
 
+  @Column(name = "type", nullable = false)
+  private String type;
+
   @CreatedDate
   @Column(name = "created", updatable = false, nullable = false)
   private LocalDateTime createdAt;
@@ -40,28 +44,42 @@ public class User {
   @Column(name = "updated", nullable = false)
   private LocalDateTime updatedAt;
 
-  @OneToOne(mappedBy = "user")
-  private Organiser organiser;
+  // ----------------------
+  // USER can organise multiple EVENTS
+  // ----------------------
+  @OneToMany(mappedBy = "organiser", cascade = CascadeType.ALL)
+  private List<Event> organizedEvents = new ArrayList<>();
 
-  @OneToOne(mappedBy = "user")
-  private Staff staff;
+  // ----------------------
+  // USER can be STAFF in multiple EVENTS
+  // ----------------------
+  @ManyToMany
+  @JoinTable(
+      name = "user_event_staff",
+      joinColumns = @JoinColumn(name = "user_id"),
+      inverseJoinColumns = @JoinColumn(name = "event_id"))
+  private List<Event> eventStaff = new ArrayList<>();
 
-  @OneToOne(mappedBy = "user")
-  private Attendee attendee;
+  // ----------------------
+  // USER can be ATTENDEE in multiple EVENTS
+  // ----------------------
+  @ManyToMany
+  @JoinTable(
+      name = "user_event_attendees",
+      joinColumns = @JoinColumn(name = "user_id"),
+      inverseJoinColumns = @JoinColumn(name = "event_id"))
+  private List<Event> eventAttendees = new ArrayList<>();
 
-  @Override
-  public boolean equals(Object o) {
-    if (o == null || getClass() != o.getClass()) return false;
-    User user = (User) o;
-    return Objects.equals(id, user.id)
-        && Objects.equals(name, user.name)
-        && Objects.equals(email, user.email)
-        && Objects.equals(createdAt, user.createdAt)
-        && Objects.equals(updatedAt, user.updatedAt);
-  }
+  // ----------------------
+  // USER can have multiple TICKETS
+  // ----------------------
+  @OneToMany(mappedBy = "attendee", cascade = CascadeType.ALL)
+  private List<Ticket> tickets = new ArrayList<>();
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(id, name, email, createdAt, updatedAt);
-  }
+  // ----------------------
+  // Optional: USER can purchase tickets
+  // ----------------------
+  // @OneToMany(mappedBy = "purchaser", cascade = CascadeType.ALL)
+  // private List<Ticket> purchasedTickets = new ArrayList<>();
+
 }
