@@ -9,10 +9,12 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,7 +25,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
-@Table(name = "attendee")
+@Table(name = "attendees")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -63,4 +65,26 @@ public class Attendee {
   // ----------------------
   @OneToMany(mappedBy = "attendee", cascade = CascadeType.ALL)
   private List<Ticket> attendeeTickets = new ArrayList<>();
+
+  // ----------------------
+  // ----------------------
+  @OneToOne
+  @JoinTable(name = "user_id")
+  private User user;
+
+  @Override
+  public boolean equals(Object o) {
+    if (o == null || getClass() != o.getClass()) return false;
+    Attendee attendee = (Attendee) o;
+    return Objects.equals(id, attendee.id)
+        && Objects.equals(name, attendee.name)
+        && Objects.equals(email, attendee.email)
+        && Objects.equals(createdAt, attendee.createdAt)
+        && Objects.equals(updatedAt, attendee.updatedAt);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(id, name, email, createdAt, updatedAt);
+  }
 }

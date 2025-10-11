@@ -7,6 +7,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
@@ -16,6 +18,7 @@ import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -26,15 +29,17 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
-@Table(name = "event")
+@Table(name = "events")
 @Getter
 @Setter
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
 @AllArgsConstructor
 public class Event {
+
   @Id
   @Column(name = "id", nullable = false, updatable = false)
+  @GeneratedValue(strategy = GenerationType.UUID)
   private UUID id;
 
   @Column(name = "name", nullable = false)
@@ -90,4 +95,16 @@ public class Event {
   // ----------------------
   @OneToMany(mappedBy = "event", cascade = CascadeType.ALL)
   private List<TicketType> ticketTypes = new ArrayList<>();
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Event event = (Event) o;
+        return Objects.equals(id, event.id) && Objects.equals(name, event.name) && Objects.equals(start, event.start) && Objects.equals(end, event.end) && Objects.equals(venue, event.venue) && Objects.equals(SaleStartDate, event.SaleStartDate) && Objects.equals(SaleEndDate, event.SaleEndDate) && status == event.status && Objects.equals(createdAt, event.createdAt) && Objects.equals(updatedAt, event.updatedAt);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, start, end, venue, SaleStartDate, SaleEndDate, status, createdAt, updatedAt);
+    }
 }

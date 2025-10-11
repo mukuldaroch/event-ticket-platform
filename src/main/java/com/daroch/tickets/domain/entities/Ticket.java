@@ -16,6 +16,7 @@ import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -26,7 +27,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
-@Table(name = "ticket")
+@Table(name = "tickets")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -76,4 +77,16 @@ public class Ticket {
   // ----------------------
   @OneToMany(mappedBy = "ticket", cascade = CascadeType.ALL)
   private List<QrCode> qrCodes = new ArrayList<>();
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Ticket ticket = (Ticket) o;
+        return Objects.equals(id, ticket.id) && ticketStausEnum == ticket.ticketStausEnum && Objects.equals(createdAt, ticket.createdAt) && Objects.equals(updatedAt, ticket.updatedAt);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, ticketStausEnum, createdAt, updatedAt);
+    }
 }

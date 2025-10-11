@@ -16,6 +16,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -42,9 +43,6 @@ public class TicketValidation {
   @Enumerated(EnumType.STRING)
   private TicketValidationStatusEnum status;
 
-  @Column(name = "validation_method", nullable = false)
-  private TicketValidationMethod validationMethod;
-
   @CreatedDate
   @Column(name = "created", updatable = false, nullable = false)
   private LocalDateTime createdAt;
@@ -53,7 +51,22 @@ public class TicketValidation {
   @Column(name = "updated", nullable = false)
   private LocalDateTime updatedAt;
 
+    @Column(name = "validation_method", nullable = false)
+    private TicketValidationMethod validationMethod;
+
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "ticket_id")
   private Ticket ticket;
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        TicketValidation that = (TicketValidation) o;
+        return Objects.equals(id, that.id) && status == that.status && Objects.equals(createdAt, that.createdAt) && Objects.equals(updatedAt, that.updatedAt);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, status, createdAt, updatedAt);
+    }
 }

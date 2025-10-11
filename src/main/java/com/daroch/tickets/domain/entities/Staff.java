@@ -1,17 +1,18 @@
 package com.daroch.tickets.domain.entities;
-import jakarta.persistence.EntityListeners;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,6 +20,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
 @Table(name = "staff")
@@ -66,4 +68,26 @@ public class Staff {
   // One Event can have many Staff.
   // One Staff can work in many Events.
   // So we create a bridge table: event_staff(event_id, staff_id).
+
+  // ----------------------
+  // ----------------------
+  @OneToOne
+  @JoinTable(name = "user_id")
+  private User user;
+
+  @Override
+  public boolean equals(Object o) {
+    if (o == null || getClass() != o.getClass()) return false;
+    Staff staff = (Staff) o;
+    return Objects.equals(id, staff.id)
+        && Objects.equals(name, staff.name)
+        && Objects.equals(email, staff.email)
+        && Objects.equals(createdAt, staff.createdAt)
+        && Objects.equals(updatedAt, staff.updatedAt);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(id, name, email, createdAt, updatedAt);
+  }
 }

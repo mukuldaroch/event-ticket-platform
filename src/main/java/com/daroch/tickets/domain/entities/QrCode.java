@@ -11,6 +11,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -34,6 +35,9 @@ public class QrCode {
   @Column(name = "status", nullable = false)
   private QrCodeStatusEnum status;
 
+  @Column(name = "value", nullable = false)
+  private String value;
+
   @CreatedDate
   @Column(name = "created", updatable = false, nullable = false)
   private LocalDateTime createdAt;
@@ -47,4 +51,16 @@ public class QrCode {
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "ticket_id")
   private Ticket ticket;
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        QrCode qrCode = (QrCode) o;
+        return Objects.equals(id, qrCode.id) && status == qrCode.status && Objects.equals(value, qrCode.value) && Objects.equals(createdAt, qrCode.createdAt) && Objects.equals(updatedAt, qrCode.updatedAt);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, status, value, createdAt, updatedAt);
+    }
 }
