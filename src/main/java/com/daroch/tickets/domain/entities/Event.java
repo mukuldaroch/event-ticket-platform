@@ -73,38 +73,50 @@ public class Event {
   @Column(name = "updated", nullable = false)
   private LocalDateTime updatedAt;
 
-  // ----------------------
-  // one ORGANISER can organize multiple EVENTS
-  // ----------------------
-  @ManyToOne
+  // ---------------------------------------------
+  // multiple EVENTS can be organised by ORGANISER
+  // ---------------------------------------------
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "organiser_id")
-  private Organiser organiser;
+  private User organiser;
 
-  // ----------------------
-  // ----------------------
+  // ---------------------------------------------
+  // EVENT can have multiple STAFF
+  // ---------------------------------------------
   @ManyToMany(mappedBy = "eventStaff")
-  private List<Staff> staff = new ArrayList<>();
+  private List<User> staff = new ArrayList<>();
 
-  // ----------------------
-  // ----------------------
+  // ---------------------------------------------
+  // EVENT can have multiple ATTENDEES
+  // ---------------------------------------------
   @ManyToMany(mappedBy = "eventAttendees")
-  private List<Attendee> attendees;
+  private List<User> attendees;
 
-  // ----------------------
-  // one EVENT can have multiple ATTENDEES
-  // ----------------------
+  // ---------------------------------------------
+  // EVENT can have multiple TicketTypes
+  // ---------------------------------------------
   @OneToMany(mappedBy = "event", cascade = CascadeType.ALL)
   private List<TicketType> ticketTypes = new ArrayList<>();
 
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        Event event = (Event) o;
-        return Objects.equals(id, event.id) && Objects.equals(name, event.name) && Objects.equals(start, event.start) && Objects.equals(end, event.end) && Objects.equals(venue, event.venue) && Objects.equals(SaleStartDate, event.SaleStartDate) && Objects.equals(SaleEndDate, event.SaleEndDate) && status == event.status && Objects.equals(createdAt, event.createdAt) && Objects.equals(updatedAt, event.updatedAt);
-    }
+  @Override
+  public boolean equals(Object o) {
+    if (o == null || getClass() != o.getClass()) return false;
+    Event event = (Event) o;
+    return Objects.equals(id, event.id)
+        && Objects.equals(name, event.name)
+        && Objects.equals(start, event.start)
+        && Objects.equals(end, event.end)
+        && Objects.equals(venue, event.venue)
+        && Objects.equals(SaleStartDate, event.SaleStartDate)
+        && Objects.equals(SaleEndDate, event.SaleEndDate)
+        && status == event.status
+        && Objects.equals(createdAt, event.createdAt)
+        && Objects.equals(updatedAt, event.updatedAt);
+  }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name, start, end, venue, SaleStartDate, SaleEndDate, status, createdAt, updatedAt);
-    }
+  @Override
+  public int hashCode() {
+    return Objects.hash(
+        id, name, start, end, venue, SaleStartDate, SaleEndDate, status, createdAt, updatedAt);
+  }
 }
