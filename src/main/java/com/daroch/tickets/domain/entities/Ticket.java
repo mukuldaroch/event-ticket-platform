@@ -54,7 +54,7 @@ public class Ticket {
   // ----------------------
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "attendee_id")
-  private Attendee attendee;
+  private User attendee;
 
   // ----------------------
   // ----------------------

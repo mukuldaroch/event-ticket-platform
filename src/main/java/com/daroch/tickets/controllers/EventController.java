@@ -3,6 +3,7 @@ package com.daroch.tickets.controllers;
 import com.daroch.tickets.domain.CreateEventRequest;
 import com.daroch.tickets.domain.dtos.CreateEventRequestDto;
 import com.daroch.tickets.domain.dtos.CreateEventResponseDto;
+import com.daroch.tickets.domain.entities.Event;
 import com.daroch.tickets.mappers.EventMapper;
 import com.daroch.tickets.services.EventService;
 import jakarta.validation.Valid;

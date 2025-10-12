@@ -48,32 +48,6 @@ public class Staff {
   @Column(name = "updated", nullable = false)
   private LocalDateTime updatedAt;
 
-  // ----------------------
-  // ----------------------
-  @ManyToMany()
-  @JoinTable(
-      name = "event_staff",
-      joinColumns = @JoinColumn(name = "staff_id"),
-      inverseJoinColumns = @JoinColumn(name = "event_id"))
-  // joinColumns = staff’s FK
-  // inverseJoinColumns = event’s FK
-  private List<Event> eventStaff = new ArrayList<>();
-
-  // The Core Idea of Many-to-Many:
-  //
-  // In relational databases, many-to-many is not directly possible.
-  // You always need a join (bridge) table.
-  //
-  // Example:
-  // One Event can have many Staff.
-  // One Staff can work in many Events.
-  // So we create a bridge table: event_staff(event_id, staff_id).
-
-  // ----------------------
-  // ----------------------
-  @OneToOne
-  @JoinTable(name = "user_id")
-  private User user;
 
   @Override
   public boolean equals(Object o) {

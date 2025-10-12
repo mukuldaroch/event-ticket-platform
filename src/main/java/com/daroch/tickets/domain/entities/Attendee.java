@@ -50,28 +50,6 @@ public class Attendee {
   @Column(name = "updated", nullable = false)
   private LocalDateTime updatedAt;
 
-  // ----------------------
-  // ----------------------
-  @ManyToMany
-  @JoinTable(
-      name = "event_attendee",
-      joinColumns = @JoinColumn(name = "attendee_id"),
-      inverseJoinColumns = @JoinColumn(name = "event_id"))
-  // joinColumns = attendee’s FK
-  // inverseJoinColumns = event’s FK
-  private List<Event> eventAttendees = new ArrayList<>();
-
-  // ----------------------
-  // ----------------------
-  @OneToMany(mappedBy = "attendee", cascade = CascadeType.ALL)
-  private List<Ticket> attendeeTickets = new ArrayList<>();
-
-  // ----------------------
-  // ----------------------
-  @OneToOne
-  @JoinTable(name = "user_id")
-  private User user;
-
   @Override
   public boolean equals(Object o) {
     if (o == null || getClass() != o.getClass()) return false;

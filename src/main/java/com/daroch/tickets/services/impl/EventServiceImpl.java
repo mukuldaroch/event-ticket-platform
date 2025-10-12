@@ -2,11 +2,11 @@ package com.daroch.tickets.services.impl;
 
 import com.daroch.tickets.domain.CreateEventRequest;
 import com.daroch.tickets.domain.entities.Event;
-import com.daroch.tickets.domain.entities.Organiser;
 import com.daroch.tickets.domain.entities.TicketType;
+import com.daroch.tickets.domain.entities.User;
 import com.daroch.tickets.exceptions.UserNotFoundException;
 import com.daroch.tickets.repositories.EventRepository;
-import com.daroch.tickets.repositories.OrganiserRepository;
+import com.daroch.tickets.repositories.UserRepository;
 import com.daroch.tickets.services.EventService;
 import java.util.List;
 import java.util.UUID;
@@ -18,15 +18,15 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class EventServiceImpl implements EventService {
 
-  private final OrganiserRepository organiserRepository;
+  private final UserRepository userRepository;
   private final EventRepository eventRepository;
 
   @Override
   public Event createEvent(UUID organizerId, CreateEventRequest eventRequest) {
 
     // 1: Find organiser
-    Organiser organizer =
-        organiserRepository
+    User organizer =
+        userRepository
             .findById(organizerId)
             .orElseThrow(
                 () ->
@@ -38,7 +38,8 @@ public class EventServiceImpl implements EventService {
         eventRequest.getTicketTypes().stream()
             .map(
                 ticketType -> {
-                  // ticketType is a lambda parameter — basically a placeholder name for each element of the stream. Think of
+                  // ticketType is a lambda parameter — basically a
+                  // placeholder name for each element of the stream. Think of
                   // it like a loop variable in a for loop:
                   TicketType ticketTypeEntity = new TicketType();
                   ticketTypeEntity.setName(ticketType.getName());
@@ -47,7 +48,8 @@ public class EventServiceImpl implements EventService {
                   ticketTypeEntity.setTotalAvalaible(ticketType.getTotalAvalaible());
                   return ticketTypeEntity;
                 })
-            // for (CreateTicketTypeRequest ticketType : eventRequest.getTicketTypes()) {}
+            // for (CreateTicketTypeRequest ticketType :
+            // eventRequest.getTicketTypes()) {}
             .collect(Collectors.toList());
 
     // 3: Create Event entity
