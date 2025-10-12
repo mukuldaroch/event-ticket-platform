@@ -42,5 +42,5 @@ jobs:
       - name: Wait for Postgres to be ready
         run: sleep 20
 
-      - name: Build & Test
-        run: mvn clean verify -Dspring.profiles.active=ci
+      - name: Build & Test with Gradle
+        run: ./gradlew clean build -Dspring.profiles.active=ci
