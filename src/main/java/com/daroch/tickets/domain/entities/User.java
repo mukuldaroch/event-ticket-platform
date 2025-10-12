@@ -3,13 +3,23 @@ package com.daroch.tickets.domain.entities;
 import jakarta.persistence.*;
 import jakarta.persistence.EntityListeners;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
 @Table(name = "users")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
 public class User {
 
@@ -23,9 +33,8 @@ public class User {
   @Column(name = "email", nullable = false, unique = true)
   private String email;
 
-  // @Enumerated(EnumType.STRING)
-  // @Column(name = "user_type", nullable = false)
-  // private UserType userType; // ORGANISER, STAFF, ATTENDEE
+  @Column(name = "type", nullable = false)
+  private String type;
 
   @CreatedDate
   @Column(name = "created", updatable = false, nullable = false)
@@ -35,55 +44,42 @@ public class User {
   @Column(name = "updated", nullable = false)
   private LocalDateTime updatedAt;
 
-  // ========================
-  // Getters and Setters
-  // ========================
+  // ----------------------
+  // USER can organise multiple EVENTS
+  // ----------------------
+  @OneToMany(mappedBy = "organiser", cascade = CascadeType.ALL)
+  private List<Event> organizedEvents = new ArrayList<>();
 
-  public UUID getId() {
-    return id;
-  }
+  // ----------------------
+  // USER can be STAFF in multiple EVENTS
+  // ----------------------
+  @ManyToMany
+  @JoinTable(
+      name = "user_event_staff",
+      joinColumns = @JoinColumn(name = "user_id"),
+      inverseJoinColumns = @JoinColumn(name = "event_id"))
+  private List<Event> eventStaff = new ArrayList<>();
 
-  public void setId(UUID id) {
-    this.id = id;
-  }
+  // ----------------------
+  // USER can be ATTENDEE in multiple EVENTS
+  // ----------------------
+  @ManyToMany
+  @JoinTable(
+      name = "user_event_attendees",
+      joinColumns = @JoinColumn(name = "user_id"),
+      inverseJoinColumns = @JoinColumn(name = "event_id"))
+  private List<Event> eventAttendees = new ArrayList<>();
 
-  public String getName() {
-    return name;
-  }
+  // ----------------------
+  // USER can have multiple TICKETS
+  // ----------------------
+  @OneToMany(mappedBy = "attendee", cascade = CascadeType.ALL)
+  private List<Ticket> tickets = new ArrayList<>();
 
-  public void setName(String name) {
-    this.name = name;
-  }
+  // ----------------------
+  // Optional: USER can purchase tickets
+  // ----------------------
+  // @OneToMany(mappedBy = "purchaser", cascade = CascadeType.ALL)
+  // private List<Ticket> purchasedTickets = new ArrayList<>();
 
-  public String getEmail() {
-    return email;
-  }
-
-  public void setEmail(String email) {
-    this.email = email;
-  }
-
-  // public UserType getUserType() {
-  // return userType;
-  // }
-  //
-  // public void setUserType(UserType userType) {
-  // this.userType = userType;
-  // }
-
-  public LocalDateTime getCreated() {
-    return createdAt;
-  }
-
-  public void setCreated(LocalDateTime created) {
-    this.createdAt = created;
-  }
-
-  public LocalDateTime getUpdated() {
-    return updatedAt;
-  }
-
-  public void setUpdated(LocalDateTime updated) {
-    this.updatedAt = updated;
-  }
 }

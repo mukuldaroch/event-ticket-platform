@@ -6,11 +6,13 @@ event appears on the platform after creation
 purchase event ticket
 want to perchase the correct ticket for and event
 
-# Module Structure
+[ Database Design and Entity RelationShips ](https://miro.com/app/board/uXjVJC_Ymcs=/?share_link_id=897811772590)
 
-1. Design the event organizer's REST API endpoints
-2. Design the event attendee's REST API endpoints
-3. Design the event staff's REST API endpoints
+## Module Structure
+
+- Design the event organizer's REST API endpoints
+- Design the event attendee's REST API endpoints
+- Design the event staff's REST API endpoints
 
 | Methord | Endpoints                                                               | Usage                      | Request Body                       |
 | ------- | ----------------------------------------------------------------------- | -------------------------- | ---------------------------------- |

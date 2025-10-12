@@ -15,6 +15,7 @@ import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,7 +26,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
-@Table(name = "ticket_type")
+@Table(name = "ticket_types")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -66,4 +67,17 @@ public class TicketType {
   // ----------------------
   @OneToMany(mappedBy = "ticketType", cascade = CascadeType.ALL)
   private List<Ticket> tickets = new ArrayList<>();
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        TicketType that = (TicketType) o;
+        return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(price, that.price) && Objects.equals(description, that.description) && Objects.equals(totalAvalaible, that.totalAvalaible) && Objects.equals(createdAt, that.createdAt) && Objects.equals(updatedAt, that.updatedAt);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, price, description, totalAvalaible, createdAt, updatedAt);
+    }
 }
