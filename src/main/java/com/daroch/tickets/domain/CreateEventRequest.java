@@ -2,6 +2,7 @@ package com.daroch.tickets.domain;
 
 import com.daroch.tickets.domain.enums.EventStatusEnum;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -10,6 +11,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+//@Data
 @Getter
 @Setter
 @NoArgsConstructor

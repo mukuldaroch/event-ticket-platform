@@ -143,3 +143,4 @@ docker-compose.override.yml
 backup.md
 ProjectBrief.md
 notes.md
+curl.md

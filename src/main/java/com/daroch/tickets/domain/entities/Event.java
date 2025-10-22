@@ -96,7 +96,7 @@ public class Event {
   // ---------------------------------------------
   // EVENT can have multiple TicketTypes
   // ---------------------------------------------
-  @OneToMany(mappedBy = "event", cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<TicketType> ticketTypes = new ArrayList<>();
 
   @Override

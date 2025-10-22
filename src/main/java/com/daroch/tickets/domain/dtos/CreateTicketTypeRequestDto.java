@@ -1,7 +1,5 @@
 package com.daroch.tickets.domain.dtos;
 
-import java.util.UUID;
-
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
@@ -14,16 +12,16 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CreateTicketTypeRequestDto {
 
-	@NotBlank(message = "Ticket type name is required")
-	private String name;
+  @NotBlank(message = "Ticket type name is required")
+  private String name;
 
-	@NotNull(message = "Price is required")
-	@PositiveOrZero(message = "Price must be zero or greater")
-	private Double price;
+  @NotNull(message = "Price is required")
+  @PositiveOrZero(message = "Price must be zero or greater")
+  private Double price;
 
-	private String description;
+  private String description;
 
-	private Integer totalAvalaible;
+  private Integer totalAvailable;
 }
 // ---------------------------------------------------------------------
 // This is the data you expect from the client when they call your API.

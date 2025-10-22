@@ -10,7 +10,6 @@ import com.daroch.tickets.repositories.UserRepository;
 import com.daroch.tickets.services.EventService;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -45,12 +44,12 @@ public class EventServiceImpl implements EventService {
                   ticketTypeEntity.setName(ticketType.getName());
                   ticketTypeEntity.setPrice(ticketType.getPrice());
                   ticketTypeEntity.setDescription(ticketType.getDescription());
-                  ticketTypeEntity.setTotalAvalaible(ticketType.getTotalAvalaible());
+                  ticketTypeEntity.setTotalAvailable(ticketType.getTotalAvailable());
                   return ticketTypeEntity;
                 })
-            // for (CreateTicketTypeRequest ticketType :
-            // eventRequest.getTicketTypes()) {}
-            .collect(Collectors.toList());
+            .toList();
+    // for (CreateTicketTypeRequest ticketType :
+    // eventRequest.getTicketTypes()) {}
 
     // 3: Create Event entity
     Event eventToCreate = new Event();
@@ -63,8 +62,7 @@ public class EventServiceImpl implements EventService {
     eventToCreate.setStatus(eventRequest.getStatus());
     eventToCreate.setOrganiser(organizer);
 
-    // 4: Link both sides of the relationship
-    ticketTypesToCreate.forEach(ticketType -> ticketType.setEvent(eventToCreate));
+    // 4: Linking the relationship
     eventToCreate.setTicketTypes(ticketTypesToCreate);
 
     // 5: Save the event (cascades tickets automatically)

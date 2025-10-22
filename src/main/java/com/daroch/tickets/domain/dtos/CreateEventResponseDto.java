@@ -18,7 +18,6 @@ public class CreateEventResponseDto {
 	private UUID id;
 	private String name;
 	private String description;
-	private Integer totalAvalaible;
 	private LocalDateTime start;
 	private LocalDateTime end;
 	private String venue;
