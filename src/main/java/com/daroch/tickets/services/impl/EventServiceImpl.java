@@ -11,6 +11,8 @@ import com.daroch.tickets.services.EventService;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -32,6 +34,9 @@ public class EventServiceImpl implements EventService {
                     new UserNotFoundException(
                         String.format("User with ID '%s' not found", organizerId)));
 
+    // 3: Create Event entity
+    Event eventToCreate = new Event();
+
     // 2: Map CreateTicketTypeRequest → TicketType entities
     List<TicketType> ticketTypesToCreate =
         eventRequest.getTicketTypes().stream()
@@ -45,27 +50,29 @@ public class EventServiceImpl implements EventService {
                   ticketTypeEntity.setPrice(ticketType.getPrice());
                   ticketTypeEntity.setDescription(ticketType.getDescription());
                   ticketTypeEntity.setTotalAvailable(ticketType.getTotalAvailable());
+                  ticketTypeEntity.setEvent(eventToCreate);
                   return ticketTypeEntity;
                 })
             .toList();
     // for (CreateTicketTypeRequest ticketType :
     // eventRequest.getTicketTypes()) {}
 
-    // 3: Create Event entity
-    Event eventToCreate = new Event();
     eventToCreate.setName(eventRequest.getName());
     eventToCreate.setStart(eventRequest.getStart());
     eventToCreate.setEnd(eventRequest.getEnd());
     eventToCreate.setVenue(eventRequest.getVenue());
-    eventToCreate.setSaleStartDate(eventRequest.getSalesStart());
-    eventToCreate.setSaleEndDate(eventRequest.getSalesEnd());
+    eventToCreate.setSalesStartDate(eventRequest.getSalesStartDate());
+    eventToCreate.setSalesEndDate(eventRequest.getSalesEndDate());
     eventToCreate.setStatus(eventRequest.getStatus());
-    eventToCreate.setOrganiser(organizer);
-
+    eventToCreate.setOrganizer(organizer);
     // 4: Linking the relationship
     eventToCreate.setTicketTypes(ticketTypesToCreate);
 
     // 5: Save the event (cascades tickets automatically)
     return eventRepository.save(eventToCreate);
+  }
+
+  public Page<Event> listEventsForOrganizer(UUID organizerId, Pageable pageable) {
+    return eventRepository.findByOrganizerId(organizerId, pageable);
   }
 }
