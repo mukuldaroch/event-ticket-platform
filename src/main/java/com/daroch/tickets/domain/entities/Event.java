@@ -55,11 +55,11 @@ public class Event {
   @Column(name = "venue", nullable = false)
   private String venue;
 
-  @Column(name = "SaleStartDate")
-  private LocalDateTime SaleStartDate;
+  @Column(name = "salesStartDate")
+  private LocalDateTime salesStartDate;
 
-  @Column(name = "SaleEndDate")
-  private LocalDateTime SaleEndDate;
+  @Column(name = "salesEndDate")
+  private LocalDateTime salesEndDate;
 
   @Column(name = "status", nullable = false)
   @Enumerated(EnumType.STRING)
@@ -78,8 +78,8 @@ public class Event {
   // multiple EVENTS can be organised by ORGANISER
   // ---------------------------------------------
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "organiser_id")
-  private User organiser;
+  @JoinColumn(name = "organizer_id")
+  private User organizer;
 
   // ---------------------------------------------
   // EVENT can have multiple STAFF
@@ -96,7 +96,7 @@ public class Event {
   // ---------------------------------------------
   // EVENT can have multiple TicketTypes
   // ---------------------------------------------
-  @OneToMany(mappedBy = "event", cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<TicketType> ticketTypes = new ArrayList<>();
 
   @Override
@@ -108,8 +108,8 @@ public class Event {
         && Objects.equals(start, event.start)
         && Objects.equals(end, event.end)
         && Objects.equals(venue, event.venue)
-        && Objects.equals(SaleStartDate, event.SaleStartDate)
-        && Objects.equals(SaleEndDate, event.SaleEndDate)
+        && Objects.equals(salesStartDate, event.salesStartDate)
+        && Objects.equals(salesEndDate, event.salesEndDate)
         && status == event.status
         && Objects.equals(createdAt, event.createdAt)
         && Objects.equals(updatedAt, event.updatedAt);
@@ -118,6 +118,6 @@ public class Event {
   @Override
   public int hashCode() {
     return Objects.hash(
-        id, name, start, end, venue, SaleStartDate, SaleEndDate, status, createdAt, updatedAt);
+        id, name, start, end, venue, salesStartDate, salesEndDate, status, createdAt, updatedAt);
   }
 }

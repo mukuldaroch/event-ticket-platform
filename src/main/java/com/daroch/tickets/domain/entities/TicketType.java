@@ -47,7 +47,7 @@ public class TicketType {
   private String description;
 
   @Column(name = "total_avalaible", nullable = false)
-  private Integer totalAvalaible;
+  private Integer totalAvailable;
 
   @CreatedDate
   @Column(name = "created", updatable = false, nullable = false)
@@ -60,7 +60,7 @@ public class TicketType {
   // ----------------------
   // ----------------------
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "event_id")
+  @JoinColumn(name = "event_id", nullable = false)
   private Event event;
 
   // ----------------------
@@ -68,16 +68,21 @@ public class TicketType {
   @OneToMany(mappedBy = "ticketType", cascade = CascadeType.ALL)
   private List<Ticket> tickets = new ArrayList<>();
 
+  @Override
+  public boolean equals(Object o) {
+    if (o == null || getClass() != o.getClass()) return false;
+    TicketType that = (TicketType) o;
+    return Objects.equals(id, that.id)
+        && Objects.equals(name, that.name)
+        && Objects.equals(price, that.price)
+        && Objects.equals(description, that.description)
+        && Objects.equals(totalAvailable, that.totalAvailable)
+        && Objects.equals(createdAt, that.createdAt)
+        && Objects.equals(updatedAt, that.updatedAt);
+  }
 
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        TicketType that = (TicketType) o;
-        return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(price, that.price) && Objects.equals(description, that.description) && Objects.equals(totalAvalaible, that.totalAvalaible) && Objects.equals(createdAt, that.createdAt) && Objects.equals(updatedAt, that.updatedAt);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name, price, description, totalAvalaible, createdAt, updatedAt);
-    }
+  @Override
+  public int hashCode() {
+    return Objects.hash(id, name, price, description, totalAvailable, createdAt, updatedAt);
+  }
 }

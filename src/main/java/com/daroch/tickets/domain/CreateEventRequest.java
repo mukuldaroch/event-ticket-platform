@@ -1,28 +1,28 @@
 package com.daroch.tickets.domain;
 
 import com.daroch.tickets.domain.enums.EventStatusEnum;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-
+// @Data
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class CreateEventRequest {
-	private String name;
-	private LocalDateTime start;
-	private LocalDateTime end;
-	private String venue;
-	private LocalDateTime salesStart;
-	private LocalDateTime salesEnd;
-	private EventStatusEnum status;
-	private List<CreateTicketTypeRequest> ticketTypes = new ArrayList<>();
+  private String name;
+  private LocalDateTime start;
+  private LocalDateTime end;
+  private String venue;
+  private LocalDateTime salesStartDate;
+  private LocalDateTime salesEndDate;
+  private EventStatusEnum status;
+  private List<CreateTicketTypeRequest> ticketTypes = new ArrayList<>();
 }
 // POST /events
 // {

@@ -47,7 +47,7 @@ public class User {
   // ----------------------
   // USER can organise multiple EVENTS
   // ----------------------
-  @OneToMany(mappedBy = "organiser", cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "organizer", cascade = CascadeType.ALL)
   private List<Event> organizedEvents = new ArrayList<>();
 
   // ----------------------

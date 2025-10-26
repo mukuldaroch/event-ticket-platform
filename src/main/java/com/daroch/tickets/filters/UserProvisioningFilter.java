@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.UUID;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -15,13 +16,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 @Component
+@RequiredArgsConstructor
 public class UserProvisioningFilter extends OncePerRequestFilter {
 
   private final UserRepository userRepository;
-
-  public UserProvisioningFilter(UserRepository userRepository) {
-    this.userRepository = userRepository;
-  }
 
   @Override
   protected void doFilterInternal(
@@ -40,6 +38,7 @@ public class UserProvisioningFilter extends OncePerRequestFilter {
         user.setId(keycloakID);
         user.setName(jwt.getClaimAsString("preferred_username"));
         user.setEmail(jwt.getClaimAsString("email"));
+        user.setType("Organizer");
 
         userRepository.save(user);
       }

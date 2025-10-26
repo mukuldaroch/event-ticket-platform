@@ -11,18 +11,17 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 public class SecurityConfig {
-    @Bean
-    public SecurityFilterChain filterChain(
-            HttpSecurity http, UserProvisioningFilter userProvisioningFilter) throws Exception {
+  @Bean
+  public SecurityFilterChain filterChain(
+      HttpSecurity http, UserProvisioningFilter userProvisioningFilter) throws Exception {
 
-        http
-                .authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
-                .csrf(csrf -> csrf.disable())
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()))
-                .addFilterAfter(userProvisioningFilter, BearerTokenAuthenticationFilter.class);
+    http.authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
+        .csrf(csrf -> csrf.disable())
+        .sessionManagement(
+            session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()))
+        .addFilterAfter(userProvisioningFilter, BearerTokenAuthenticationFilter.class);
 
-        return http.build();
-    }
+    return http.build();
+  }
 }
-
