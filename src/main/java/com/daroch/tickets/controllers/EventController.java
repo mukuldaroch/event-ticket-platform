@@ -3,6 +3,7 @@ package com.daroch.tickets.controllers;
 import com.daroch.tickets.domain.CreateEventRequest;
 import com.daroch.tickets.domain.dtos.CreateEventRequestDto;
 import com.daroch.tickets.domain.dtos.CreateEventResponseDto;
+import com.daroch.tickets.domain.dtos.GetEventDetailsResponseDto;
 import com.daroch.tickets.domain.dtos.ListEventResponseDto;
 import com.daroch.tickets.domain.entities.Event;
 import com.daroch.tickets.mappers.EventMapper;
@@ -17,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,6 +35,8 @@ public class EventController {
     return UUID.fromString(jwt.getSubject());
   }
 
+  // ---------------------------------------------
+  // ---------------------------------------------
   @PostMapping
   public ResponseEntity<CreateEventResponseDto> createEvent(
       @AuthenticationPrincipal Jwt jwt,
@@ -47,6 +51,8 @@ public class EventController {
     return new ResponseEntity<>(createEventResponseDto, HttpStatus.CREATED);
   }
 
+  // ---------------------------------------------
+  // ---------------------------------------------
   @GetMapping
   public ResponseEntity<Page<ListEventResponseDto>> listEvents(
       @AuthenticationPrincipal Jwt jwt, Pageable pageable) {
@@ -54,5 +60,21 @@ public class EventController {
     Page<Event> events = eventService.listEventsForOrganizer(userId, pageable);
 
     return ResponseEntity.ok(events.map(eventMapper::tolistEventResponseDto));
+  }
+
+  // ---------------------------------------------
+  // ---------------------------------------------
+  @GetMapping("/{eventId}")
+  public ResponseEntity<GetEventDetailsResponseDto> getEvent(
+      @AuthenticationPrincipal Jwt jwt, @PathVariable UUID eventId) {
+
+    UUID organizerId = parseUserId(jwt);
+
+    return eventService
+        .getEventForOrganizer(organizerId, eventId)
+        .map(eventMapper::toGetEventDetailsResponseDto)
+        .map(ResponseEntity::ok)
+        .orElse(ResponseEntity.notFound().build());
+    // .build() means: “no body, just status and headers.”
   }
 }

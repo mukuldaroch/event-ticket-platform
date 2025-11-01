@@ -9,6 +9,7 @@ import com.daroch.tickets.repositories.EventRepository;
 import com.daroch.tickets.repositories.UserRepository;
 import com.daroch.tickets.services.EventService;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -22,6 +23,8 @@ public class EventServiceImpl implements EventService {
   private final UserRepository userRepository;
   private final EventRepository eventRepository;
 
+  // -------------------------------------------------------------
+  // -------------------------------------------------------------
   @Override
   public Event createEvent(UUID organizerId, CreateEventRequest eventRequest) {
 
@@ -72,7 +75,17 @@ public class EventServiceImpl implements EventService {
     return eventRepository.save(eventToCreate);
   }
 
+  // -------------------------------------------------------------
+  // -------------------------------------------------------------
+  @Override
   public Page<Event> listEventsForOrganizer(UUID organizerId, Pageable pageable) {
     return eventRepository.findByOrganizerId(organizerId, pageable);
+  }
+
+  // -------------------------------------------------------------
+  // -------------------------------------------------------------
+  @Override
+  public Optional<Event> getEventForOrganizer(UUID organizerId, UUID eventId) {
+    return eventRepository.findByIdAndOrganizerId(eventId, organizerId);
   }
 }

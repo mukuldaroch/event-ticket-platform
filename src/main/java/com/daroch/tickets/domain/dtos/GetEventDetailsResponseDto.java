@@ -18,7 +18,7 @@ import lombok.ToString;
 @EqualsAndHashCode
 @AllArgsConstructor
 @NoArgsConstructor
-public class ListEventResponseDto {
+public class GetEventDetailsResponseDto {
 
   private UUID id;
   private String name;
@@ -28,5 +28,7 @@ public class ListEventResponseDto {
   private LocalDateTime salesStartDate;
   private LocalDateTime salesEndDate;
   private EventStatusEnum status;
-  private List<ListEventTicketTypeResponseDto> ticketTypes = new ArrayList<>();
+  private List<GetEventTicketTypesResponseDto> ticketTypes = new ArrayList<>();
+  private LocalDateTime createdAt;
+  private LocalDateTime updatedAt;
 }
