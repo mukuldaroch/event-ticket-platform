@@ -1,6 +1,7 @@
 package com.daroch.tickets.services;
 
 import com.daroch.tickets.domain.CreateEventRequest;
+import com.daroch.tickets.domain.UpdateEventRequest;
 import com.daroch.tickets.domain.entities.Event;
 import java.util.Optional;
 import java.util.UUID;
@@ -13,4 +14,6 @@ public interface EventService {
   Page<Event> listEventsForOrganizer(UUID organizerId, Pageable pageable);
 
   Optional<Event> getEventForOrganizer(UUID organizerId, UUID eventId);
+
+  Event updateEventForOrganizer(UUID organizerId, UUID eventId, UpdateEventRequest event);
 }
