@@ -4,17 +4,19 @@ import com.daroch.tickets.domain.enums.EventStatusEnum;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-// @Data
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateEventRequest {
+public class UpdateEventRequest {
+  private UUID id;
   private String name;
   private LocalDateTime start;
   private LocalDateTime end;
@@ -22,7 +24,7 @@ public class CreateEventRequest {
   private LocalDateTime salesStartDate;
   private LocalDateTime salesEndDate;
   private EventStatusEnum status;
-  private List<CreateTicketTypeRequest> ticketTypes = new ArrayList<>();
+  private List<UpdateTicketTypeRequest> ticketTypes = new ArrayList<>();
 }
 // POST /events
 // {
