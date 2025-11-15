@@ -35,11 +35,15 @@ public class EventServiceImpl implements EventService {
   private final EventRepository eventRepository;
 
   /**
-   * Creates a new event for the given organizer.
+   * Creates a new event for a given organizer.
    *
-   * @param organizerId ID of the organizer creating the event
-   * @param eventRequest request payload containing event + ticket details
-   * @return saved Event entity
+   * <p>Sets up the event entity and its associated ticket types, linking each ticket type to the
+   * parent event. The event and tickets are saved atomically via cascading.
+   *
+   * @param organizerId the UUID of the organizer creating the event; must not be null
+   * @param eventRequest payload containing event details and ticket type information
+   * @return the saved Event entity with ticket types
+   * @throws UserNotFoundException if no user exists with the given organizerId
    */
   @Override
   @Transactional
@@ -90,11 +94,11 @@ public class EventServiceImpl implements EventService {
   }
 
   /**
-   * Lists all events created by a specific organizer, paginated.
+   * Retrieves a paginated list of events created by a specific organizer.
    *
-   * @param organizerId organizer's ID
-   * @param pageable pagination settings
-   * @return Page of events
+   * @param organizerId the UUID of the organizer; must not be null
+   * @param pageable pagination and sorting information
+   * @return a Page of Event entities created by the organizer
    */
   @Override
   public Page<Event> listEventsForOrganizer(UUID organizerId, Pageable pageable) {
@@ -102,11 +106,11 @@ public class EventServiceImpl implements EventService {
   }
 
   /**
-   * Retrieves a single event for an organizer (if it belongs to them).
+   * Retrieves a single event belonging to a specific organizer.
    *
-   * @param organizerId organizer's ID
-   * @param eventId event ID
-   * @return Optional<Event> (empty if not found or not owned)
+   * @param organizerId the UUID of the organizer; must not be null
+   * @param eventId the UUID of the event to fetch; must not be null
+   * @return an Optional containing the Event if found and owned by the organizer, otherwise empty
    */
   @Override
   public Optional<Event> getEventForOrganizer(UUID organizerId, UUID eventId) {
@@ -114,15 +118,18 @@ public class EventServiceImpl implements EventService {
   }
 
   /**
-   * Updates an event and its associated ticket types.
+   * Updates an existing event and its associated ticket types for a specific organizer.
    *
-   * <p>Handles 3 cases for ticket types: - Create new ticket types (no ID) - Update existing ones
-   * (ID exists) - Delete ones missing from request
+   * <p>Handles three cases for ticket types: creation of new ones (no ID), updating existing ones
+   * (matching ID), and deletion of ticket types missing from the request.
    *
-   * @param organizerId organizer's ID
-   * @param eventId event ID to update
-   * @param event update request payload
-   * @return updated Event
+   * @param organizerId the UUID of the organizer; must not be null
+   * @param eventId the UUID of the event to update; must match the ID in the request
+   * @param event the update request payload containing updated event and ticket type data
+   * @return the updated Event entity
+   * @throws EventUpdateException if the request contains a null ID or mismatched event ID
+   * @throws EventNotFoundException if no event exists with the given eventId for the organizer
+   * @throws TicketTypeNotFoundException if a ticket type in the request does not exist in the event
    */
   @Override
   @Transactional
@@ -201,5 +208,22 @@ public class EventServiceImpl implements EventService {
 
     // save the updated event (cascade saves ticket types)
     return eventRepository.save(existingEvent);
+  }
+
+  /**
+   * Deletes an event belonging to a specific organizer.
+   *
+   * <p>Performs a safe deletion by combining the event ID and organizer ID, ensuring that only
+   * events belonging to the given organizer are deleted. If no event is deleted, an exception is
+   * thrown.
+   *
+   * @param organizerId the UUID of the organizer; must not be null
+   * @param eventId the UUID of the event to delete; must not be null
+   * @throws IllegalArgumentException if either organizerId or eventId is null
+   * @throws RuntimeException if no event was deleted (event not found or not owned by organizer)
+   */
+  @Override
+  public void deleteEventForOrganizer(UUID organizerId, UUID eventId) {
+    getEventForOrganizer(organizerId, eventId).ifPresent(eventRepository::delete);
   }
 }
