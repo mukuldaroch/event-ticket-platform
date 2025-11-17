@@ -1,6 +1,7 @@
 package com.daroch.tickets.repositories;
 
 import com.daroch.tickets.domain.entities.Event;
+import com.daroch.tickets.domain.enums.EventStatusEnum;
 import java.util.Optional;
 import java.util.UUID;
 import org.springframework.data.domain.Page;
@@ -14,5 +15,5 @@ public interface EventRepository extends JpaRepository<Event, UUID> {
 
   Optional<Event> findByIdAndOrganizerId(UUID eventId, UUID organizerId);
 
-  void deleteByIdAndOrganizerId(UUID eventId, UUID organizerId);
+  Page<Event> findByStatus(EventStatusEnum eventStatusEnum, Pageable pageable);
 }
