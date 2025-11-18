@@ -6,6 +6,7 @@ import com.daroch.tickets.domain.UpdateTicketTypeRequest;
 import com.daroch.tickets.domain.entities.Event;
 import com.daroch.tickets.domain.entities.TicketType;
 import com.daroch.tickets.domain.entities.User;
+import com.daroch.tickets.domain.enums.EventStatusEnum;
 import com.daroch.tickets.exceptions.EventNotFoundException;
 import com.daroch.tickets.exceptions.EventUpdateException;
 import com.daroch.tickets.exceptions.TicketTypeNotFoundException;
@@ -226,4 +227,10 @@ public class EventServiceImpl implements EventService {
   public void deleteEventForOrganizer(UUID organizerId, UUID eventId) {
     getEventForOrganizer(organizerId, eventId).ifPresent(eventRepository::delete);
   }
+
+  @Override
+  public Page<Event> listPublishedEvents(Pageable pageable) {
+    return eventRepository.findByStatus(EventStatusEnum.PUBLISHED, pageable);
+  }
+  ;
 }
