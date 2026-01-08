@@ -9,6 +9,8 @@ import com.daroch.tickets.domain.dtos.CreateEventResponseDto;
 import com.daroch.tickets.domain.dtos.CreateTicketTypeRequestDto;
 import com.daroch.tickets.domain.dtos.GetEventDetailsResponseDto;
 import com.daroch.tickets.domain.dtos.GetEventTicketTypesResponseDto;
+import com.daroch.tickets.domain.dtos.GetPublishedEventDetailsResponseDto;
+import com.daroch.tickets.domain.dtos.GetPublishedEventTicketTypesResponseDto;
 import com.daroch.tickets.domain.dtos.ListEventResponseDto;
 import com.daroch.tickets.domain.dtos.ListEventTicketTypeResponseDto;
 import com.daroch.tickets.domain.dtos.ListPublisedEventResponseDto;
@@ -50,4 +52,10 @@ public interface EventMapper {
 
   //
   ListPublisedEventResponseDto toListPublisedEventResponseDto(Event event);
+
+  //
+  GetPublishedEventTicketTypesResponseDto toGetPublishedEventTicketTypesResponseDto(
+      TicketType ticketType);
+
+  GetPublishedEventDetailsResponseDto toGetPublishedEventDetailsResponseDto(Event event);
 }

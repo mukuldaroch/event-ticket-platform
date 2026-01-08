@@ -20,6 +20,8 @@ repositories {
 ext {
     mapstructVersion = '1.6.3'
     lombokVersion = '1.18.32'
+    core = '3.5.1'
+    javase = '3.5.1'
 }
 
 dependencies {
@@ -44,22 +46,33 @@ dependencies {
     // Testing
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
+
+    testImplementation 'org.testcontainers:junit-jupiter:1.20.2'
+    testImplementation 'org.testcontainers:postgresql:1.20.2'
+
+    //Qr code 
+    implementation "com.google.zxing:core:3.5.1"
+    implementation "com.google.zxing:javase:3.5.1"
 }
 
 tasks.withType(Test).configureEach {
-    // ✅ Gradle 8.8+ syntax — works for Gradle 9.1
+    // Gradle 8.8+ syntax — works for Gradle 9.1
     failOnNoDiscoveredTests = false
 }
 
 tasks.withType(JavaCompile).configureEach {
     options.annotationProcessorPath = configurations.annotationProcessor
     options.compilerArgs += [
-        "-Amapstruct.defaultComponentModel=spring",
-        "-Amapstruct.verbose=true" // <- enable verbose mode for debugging
+        // "-Amapstruct.defaultComponentModel=spring"
+        // "-Amapstruct.verbose=true" // <- enable verbose mode for debugging
     ]
 }
 sourceSets.main.java.srcDirs += 'build/generated/sources/annotationProcessor/java/main'
 
 bootJar {
     enabled = true
+}
+
+test {
+    useJUnitPlatform()
 }

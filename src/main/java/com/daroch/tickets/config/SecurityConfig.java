@@ -16,7 +16,12 @@ public class SecurityConfig {
   public SecurityFilterChain filterChain(
       HttpSecurity http, UserProvisioningFilter userProvisioningFilter) throws Exception {
 
-    http.authorizeHttpRequests(auth -> auth.requestMatchers(HttpMethod.GET,"/api/v1/published-events").permitAll().anyRequest().authenticated())
+    http.authorizeHttpRequests(
+            auth ->
+                auth.requestMatchers(HttpMethod.GET, "/api/v1/published-events/**")
+                    .permitAll()
+                    .anyRequest()
+                    .authenticated())
         .csrf(csrf -> csrf.disable())
         .sessionManagement(
             session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

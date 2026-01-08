@@ -1,5 +1,8 @@
 package com.daroch.tickets.domain.entities;
 import jakarta.persistence.EntityListeners;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.daroch.tickets.domain.enums.QrCodeStatusEnum;
@@ -33,9 +36,10 @@ public class QrCode {
   private UUID id;
 
   @Column(name = "status", nullable = false)
+  @Enumerated(EnumType.STRING)
   private QrCodeStatusEnum status;
 
-  @Column(name = "value", nullable = false)
+  @Column(name = "value", columnDefinition = "TEXT", nullable = false)
   private String value;
 
   @CreatedDate

@@ -228,9 +228,45 @@ public class EventServiceImpl implements EventService {
     getEventForOrganizer(organizerId, eventId).ifPresent(eventRepository::delete);
   }
 
+  /**
+   * Retrieves a paginated list of all events that are in PUBLISHED status.
+   *
+   * <p>This is used for publicly visible listings where only published events should be displayed.
+   *
+   * @param pageable pagination details such as page number and size
+   * @return a paginated list of published events
+   */
   @Override
   public Page<Event> listPublishedEvents(Pageable pageable) {
     return eventRepository.findByStatus(EventStatusEnum.PUBLISHED, pageable);
   }
-  ;
+
+  /**
+   * Searches published events using a text-based query.
+   *
+   * <p>The search is delegated to the repository where full-text or LIKE-based search may be
+   * implemented, and only events that are published are returned.
+   *
+   * @param query the search keyword to match against event fields
+   * @param pageable pagination details for the result list
+   * @return a paginated list of search results within published events
+   */
+  @Override
+  public Page<Event> serachPublishedEvents(String query, Pageable pageable) {
+    return eventRepository.searchEvents(query, pageable);
+  }
+
+  /**
+   * Retrieves a published event by its ID.
+   *
+   * <p>This ensures that only events in PUBLISHED status are returned. If the event exists but is
+   * not published, the result will be empty.
+   *
+   * @param eventId the UUID of the event to fetch
+   * @return an Optional containing the published event if found, otherwise empty
+   */
+  @Override
+  public Optional<Event> getPublishedEvents(UUID eventId) {
+    return eventRepository.findByIdAndStatus(eventId, EventStatusEnum.PUBLISHED);
+  }
 }
