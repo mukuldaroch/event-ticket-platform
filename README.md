@@ -75,7 +75,7 @@ Here’s the complete ERD:
 - **Containerization:** Docker & Docker Compose
 - **Auth:** JWT-based Authentication
 - **Frontend (Planned):** React + Tailwind
-- **Deployment:** Dockerized microservice setup (Planned)
+- **Deployment:** Dockerized microservice setup 
 
 ---
 
