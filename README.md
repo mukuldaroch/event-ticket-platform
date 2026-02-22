@@ -1,4 +1,4 @@
-# EventForge — Event Ticketing Platform
+Event Ticketing Platform
 
 EventForge is a modular **event management and ticketing backend** built with RESTful APIs.
 It empowers **organizers** to create and manage events, define ticket types, and sell them online — all through clean, scalable endpoints.
